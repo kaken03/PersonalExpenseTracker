@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ expense|truncatewords:5 }} - Expense Tracker{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 col-md-8 col-lg-6">
+        <div class="card mt-4">
+            <div class="card-body">
+                <h3 class="card-title mb-4">Expense Details</h3>
+                
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item">
+                        <strong>Date:</strong>
+                        <span>{{ expense.date|date:"F j, Y" }}</span>
+                    </div>
+                    <div class="list-group-item">
+                        <strong>Category:</strong>
+                        <span><span class="badge bg-primary">{{ expense.get_category_display }}</span></span>
+                    </div>
+                    <div class="list-group-item">
+                        <strong>Amount:</strong>
+                        <span class="h5 ms-2">${{ expense.amount|floatformat:2 }}</span>
+                    </div>
+                    <div class="list-group-item">
+                        <strong>Description:</strong>
+                        <span>{{ expense.description|default:"—" }}</span>
+                    </div>
+                    <div class="list-group-item">
+                        <strong>Created:</strong>
+                        <span>{{ expense.created_at|date:"F j, Y H:i" }}</span>
+                    </div>
+                </div>
+                
+                <div class="mt-4 d-flex flex-wrap gap-2">
+                    <a href="{% url 'expense_update' expense.pk %}" class="btn btn-warning">Edit</a>
+                    <a href="{% url 'expense_delete' expense.pk %}" class="btn btn-danger">Delete</a>
+                    <a href="{% url 'expense_list' %}" class="btn btn-secondary">Back</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
