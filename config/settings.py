@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 from decouple import config, Csv
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -83,7 +84,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-if config('USE_POSTGRESQL', default=False, cast=bool):
+# Use DATABASE_URL for Railway, fallback to SQLite for local development
+if config('DATABASE_URL', default=None):
+    DATABASES = {
+        'default': dj_database_url.config(default=config('DATABASE_URL'), conn_max_age=600)
+    }
+elif config('USE_POSTGRESQL', default=False, cast=bool):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
