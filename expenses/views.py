@@ -34,6 +34,26 @@ def dashboard(request):
     return render(request, 'expenses/dashboard.html', context)
 
 @login_required(login_url='login')
+def dashboard_stats(request):
+    """API endpoint to get updated dashboard stats."""
+    user_expenses = Expense.objects.filter(user=request.user)
+    
+    # Get current month and year
+    today = timezone.now().date()
+    
+    # Calculate monthly total
+    monthly_expenses = user_expenses.filter(
+        date__year=today.year,
+        date__month=today.month
+    )
+    monthly_total = monthly_expenses.aggregate(Sum('amount'))['amount__sum'] or 0
+    
+    return JsonResponse({
+        'monthly_total': float(monthly_total),
+        'expense_count': user_expenses.count(),
+    })
+
+@login_required(login_url='login')
 def expense_list(request):
     """Display all user expenses with filtering by category."""
     user_expenses = Expense.objects.filter(user=request.user)
