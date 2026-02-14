@@ -144,3 +144,6 @@ LOGIN_REDIRECT_URL = 'dashboard'
 
 # Message settings
 MESSAGE_STORAGE = 'django.contrib.messages.storage.fallback.FallbackStorage'
+
+# Trust X-Forwarded-Proto header from Railway's reverse proxy
+SECURE_PROXY_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
