@@ -130,20 +130,16 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # HTTPS/Security settings for production
 if not DEBUG:
-    SECURE_SSL_REDIRECT = False
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = False  # Railway proxy handles SSL
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
     CSRF_COOKIE_HTTPONLY = True
-    SECURE_HSTS_SECONDS = 31536000
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
+    SECURE_HSTS_SECONDS = 0
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+    SECURE_HSTS_PRELOAD = False
+    SECURE_PROXY_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-# Login settings
-LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'dashboard'
-
-# Message settings
-MESSAGE_STORAGE = 'django.contrib.messages.storage.fallback.FallbackStorage'
-
-# Trust X-Forwarded-Proto header from Railway's reverse proxy
-SECURE_PROXY_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# Trust Railway's domain for CSRF
+CSRF_TRUSTED_ORIGINS = [
+    'https://personalexpensetracker.up.railway.app',
+]
